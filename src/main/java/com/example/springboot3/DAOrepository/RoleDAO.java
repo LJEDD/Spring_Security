@@ -1,12 +1,15 @@
 package com.example.springboot3.DAOrepository;
 
-
 import com.example.springboot3.model.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
-@Repository
-@Transactional
-public interface RoleDAO extends JpaRepository<Role, Long> {
+public interface RoleDao {
+
+    List<Role> getAllRoles();
+
+    Role getRole(String userRole);
+
+    Role getRoleById(Long id);
+
+    void addRole(Role role);
 }

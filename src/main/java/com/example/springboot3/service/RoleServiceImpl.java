@@ -1,38 +1,39 @@
 package com.example.springboot3.service;
 
-import com.example.springboot3.DAOrepository.RoleDAO;
+import com.example.springboot3.DAOrepository.RoleDao;
 import com.example.springboot3.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.annotation.PostConstruct;
-import java.util.HashSet;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Set;
 
 @Service
-public class RoleServiceImpl implements RoleService{
-
-    private final RoleDAO roleDAO;
+public class RoleServiceImpl implements RoleService {
+    private final RoleDao roleDao;
 
     @Autowired
-    public RoleServiceImpl(RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
-    } //1
-
-    @Override
-    public List<Role> findAllRole() {
-        return roleDAO.findAll();
+    public RoleServiceImpl(RoleDao roleDao) {
+        this.roleDao = roleDao;
     }
 
     @Override
-    public Set<Role> findByIdRoles(List<Long> roles) {
-        return new HashSet<>(roleDAO.findAllById(roles));
+    public List<Role> getAllRoles() {
+        return roleDao.getAllRoles();
     }
 
     @Override
-    @PostConstruct
-    public void addDefaultRole() {
-        roleDAO.save(new Role(1L,"ROLE_USER"));
-        roleDAO.save(new Role(2L,"ROLE_ADMIN"));
+    public Role getRole(String userRole) {
+        return roleDao.getRole(userRole);
+    }
+
+    @Override
+    public Role getRoleById(Long id) {
+        return roleDao.getRoleById(id);
+    }
+
+    @Override
+    @Transactional
+    public void addRole(Role role) {
+        roleDao.addRole(role);
     }
 }

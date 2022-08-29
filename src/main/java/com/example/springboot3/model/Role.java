@@ -1,27 +1,34 @@
 package com.example.springboot3.model;
 
 import org.springframework.security.core.GrantedAuthority;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role implements GrantedAuthority {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private String name;
+
+    @Column(name = "role", unique = true)
+    private String userRole;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     public Role() {
     }
 
-    public Role(Long id) {
-        this.id = id;
-    }
-
-    public Role(Long id, String role) {
-        this.id = id;
-        this.name = role;
+    public Role(String userRole) {
+        this.userRole = userRole;
     }
 
     public Long getId() {
@@ -32,16 +39,29 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserRole() {
+        return userRole;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserRole(String role) {
+        this.userRole = role;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
     public String getAuthority() {
-        return getName();
+        return userRole;
+    }
+
+    @Override
+    public String toString() {
+        return userRole;
     }
 }

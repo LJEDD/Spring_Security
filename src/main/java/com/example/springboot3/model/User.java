@@ -1,75 +1,75 @@
 package com.example.springboot3.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "id")
+    private Long id;
 
-    @Pattern(regexp = "[A-Za-z]{2,15}", message = "Name should be between 2 and 15 latin characters")
+    @Column(name = "name")
     private String name;
 
-    @Pattern(regexp = "[A-Za-z]{2,15}", message = "Name should be between 2 and 15 latin characters")
+    @Column(name = "surname")
     private String surname;
 
-    @Min(value = 0, message = "Age should be >= 0")
-    @Max(value = 127, message = "Age should be < 128")
-    private byte age;
+    @Column(name = "age")
+    private int age;
 
-    @Pattern(regexp = "([A-z0-9_.-]+)@([A-z0-9_.-]+).([A-z]{2,8})", message = "Enter correct email")
+    @Column(name = "email")
     private String email;
 
-    @NotEmpty(message = "Username cannot be empty")
-    @Size(min = 2, max = 15, message = "Name should be between 2 and 15 latin characters")
-    @Column(unique = true)
-    private String username;
+    @Column(name = "login")
+    private String login;
 
-    @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 4, message = "Password should be greater then 4 symbols")
+    @Column(name = "password")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "roleId"))
-    private Set<Role> roles;
+            joinColumns = @JoinColumn(name = "userid"),
+            inverseJoinColumns = @JoinColumn(name = "roleid"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String name, String surname, byte age, String email, String username, String password, Set<Role> roles) {
+    public User(String name, String surname, int age, String email, String login, String password, Set<Role> roles) {
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.email = email;
-        this.username = username;
+        this.login = login;
         this.password = password;
         this.roles = roles;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Long getId() {
+        return id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -88,11 +88,11 @@ public class User implements UserDetails {
         this.surname = surname;
     }
 
-    public byte getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(byte age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -104,27 +104,26 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getLogin() {
+        return login;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return roles;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return login;
     }
 
     @Override
@@ -145,5 +144,28 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

@@ -4,10 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SprimgBoot3Application {
+public class SpringBoot3Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(SprimgBoot3Application.class, args);
+        SpringApplication.run(SpringBoot3Application.class, args);
     }
-
 }
